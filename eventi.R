@@ -37,7 +37,7 @@ ggnet2(net = net,
        size = "degree", # grandezza dei nodi
        max_size = 7, # grandezza massima nodi
        shape = 19, # forma nodi
-       layout.exp = 0, # regola grandezza immagine (0 � grande)
+       layout.exp = 0, # regola grandezza immagine (0 è grande)
        alpha = 0.65, # trasparenza nodi (tra 0 e 1)
        label = NULL, # etichetta sui nodi
        label.color = "blue", # colore etichetta nodi
@@ -51,9 +51,30 @@ ggnet2(net = net,
        legend.position = "right" # posizione legenda
 )
 
+
 # ---------------------------------------------------------------------------- #
 
-# Modello SRRM
+
+# MODELLO SRRM CON FATTORI LATENTI UNIDIMENSIONALI (R = 1)
+
+library(amen)
+
+
+# Creo la sociomatrice
+
+eventi_data <- filtro_e(data, 70)$data
+eventi_sociomatrice <- sociomatrice_eventi(eventi_data)
+
+e.net.srm <- graph_from_adjacency_matrix(as.matrix(eventi_sociomatrice), 
+                                         mode="undirected", weighted=T, diag=F)
+hist(degree(e.net), nclass=30)
+hist(betweenness(e.net), nclass=100)
+
+y <- as.matrix(eventi_sociomatrice)
+
+
+# Seleziono le variabili di nodo (categoria e numerosità del gruppo)
+
 groupsCC =c("group_id"="character", "group_name"="character",
             "num_members"="integer", "category_id"="character",
             "category_name"="character", "organizer_id"="character",
@@ -74,14 +95,31 @@ str(events_groups)
 rownames(events_groups) <- events_groups$event_id
 
 y <- as.matrix(eventi_sociomatrice)
-Xn <- events_groups[rownames(y), c("category_id")]
+Xn <- events_groups[rownames(y), c("group_id","category_id","num_members")]
+Xn <- as.data.frame(Xn)
+Xn$category_id <- as.factor(Xn$category_id)
+Xn$group_id <- as.numeric(Xn$group_id)
+Xn$num_members <- as.numeric(Xn$num_members)
+Xm <- model.matrix(~Xn$category_id+Xn$num_members)
+head(Xm)
 
-head(Xn)
 
-library(amen)
-srrm <- ame(y, Xr = Xn, Xc = Xn)
+# Variabili diadiche
+
+stessogruppo <- matrice_stessogruppo(eventi_data)
+stessacategoria <- matrice_stessacategoria(eventi_data)
+
+Xd <- array(c(as.matrix(stessogruppo),as.matrix(stessacategoria)),
+            c(NROW(stessogruppo),NCOL(stessogruppo),2))
+str(Xd)
 
 
+# Modello
+
+r1 <- ame(y, Xdyad = Xd, Xrow = Xm[,-1], Xcol = Xm[,-1], R = 1, symmetric = TRUE)
+
+
+# ---------------------------------------------------------------------------- #
 
 
 
