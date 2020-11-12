@@ -94,3 +94,52 @@ sociomatrice_eventi <- function(data) {
 }
 
 # ---------------------------------------------------------------------------- #
+
+matrice_stessogruppo <- function(data) {
+  # Variabile diadica (appartenenza di due eventi allo stesso gruppo)
+  group_list <- unique(data$group_id)
+  events <- sort(unique(data$event_id))
+  n <- length(events)
+  sociomatrice <- matrix(0, n, n)
+  for (gr in group_list) {
+    id_list <- unique(data[data$group_id==gr,]$event_id)
+    if (length(id_list)>1) {
+      coppie <- combn(id_list, 2)
+      for (c in 1:NCOL(coppie)) {
+        i <- match(coppie[1,c], events)
+        j <- match(coppie[2,c], events)
+        sociomatrice[i,j] <- sociomatrice[i,j] + 1
+        sociomatrice[j,i] <- sociomatrice[j,i] + 1
+      }
+    }
+    data <- data[!(data$group_id==gr),]
+  }
+  sociomatrice <- as.data.frame((sociomatrice>0)+0)
+  colnames(sociomatrice) <- rownames(sociomatrice) <- events
+  sociomatrice
+  
+}
+
+matrice_stessacategoria <- function(data) {
+  # Variabile diadica (appartenenza di due eventi allo stessa categoria)
+  category_list <- unique(data$category_id)
+  events <- sort(unique(data$event_id))
+  n <- length(events)
+  sociomatrice <- matrix(0, n, n)
+  for (ca in category_list) {
+    id_list <- unique(data[data$category_id==ca,]$event_id)
+    if (length(id_list)>1) {
+      coppie <- combn(id_list, 2)
+      for (c in 1:NCOL(coppie)) {
+        i <- match(coppie[1,c], events)
+        j <- match(coppie[2,c], events)
+        sociomatrice[i,j] <- sociomatrice[i,j] + 1
+        sociomatrice[j,i] <- sociomatrice[j,i] + 1
+      }
+    }
+    data <- data[!(data$category_id==ca),]
+  }
+  sociomatrice <- as.data.frame((sociomatrice>0)+0)
+  colnames(sociomatrice) <- rownames(sociomatrice) <- events
+  sociomatrice
+}
