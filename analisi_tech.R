@@ -1,3 +1,5 @@
+# ANALISI DELLA CATEGORIA 'Tech'
+
 # ---------------------------------------------------------------------------- #
 
 library(sqldf)        # SQL
@@ -45,14 +47,27 @@ col_vector <- unlist(mapply(brewer.pal, qual_col_pals$maxcolors,
                             rownames(qual_col_pals)))
 rm(qual_col_pals)
 # Anteprima dei primi n colori in col_vector, tramite un grafico a torta
-# n <- 20; pie(rep(1,n), col=col_vector[1:n])
+n <- 40; pie(rep(1,n), col=col_vector[1:n])
+
+# ---------------------------------------------------------------------------- #
+
+# Filtro dataset e seleziono solo category=Tech
+data <- data[data$category_name=="Tech",]
+
+# Analisi esplorative al variare della 'soglia'
+soglia_list <- c(70, 60, 50, 40, 30, 20)
+for (SOGLIA in soglia_list) {
+  ev <- filtro_e(data, SOGLIA)$data
+  cat(paste("Soglia:",SOGLIA,"=>",length(unique(ev$group_name))),"gruppi\n\n")
+}
+rm(list=c("SOGLIA","ev"))
 
 # ---------------------------------------------------------------------------- #
 
 # Creo diverse sociamatrici al variare della 'soglia' e le salvo in un array
 # Esporto in images/eventi_loop i grafi delle sociomatrici
-ID <- ""  # per distinguere i risultati
-soglia_list <- c(70, 60, 50, 40, 30)
+ID <- "tech"  # per distinguere i risultati
+soglia_list <- c(70, 60, 50)
 eventi_sociomatrice_list <- list()
 for (SOGLIA in soglia_list) {
   # Fisso nome del file
@@ -65,14 +80,14 @@ for (SOGLIA in soglia_list) {
   eventi_sociomatrice_list[[name]] <- eventi_sociomatrice
   
   # Identifico categorie e assegno colori
-  category_list <- events_groups[rownames(eventi_sociomatrice), c("category_name")]
-  category_list <- as.factor(category_list)
-  tot_events <- length(category_list)
+  group_list <- events_groups[rownames(eventi_sociomatrice), c("group_name")]
+  group_list <- as.factor(group_list)
+  tot_events <- length(group_list)
   
   # Modifico nome dei livelli, aggiungendo la numerosita' (num. eventi)
-  for (j in 1:length(levels(category_list))) {
-    nj <- NROW(category_list[category_list$category_name==levels(category_list)[j],])
-    levels(category_list)[j] <- paste(levels(category_list)[j]," (",nj,")", sep="")
+  for (j in 1:length(levels(group_list))) {
+    nj <- sum(group_list==levels(group_list)[j])
+    levels(group_list)[j] <- paste(levels(group_list)[j]," (",nj,")", sep="")
   }
   
   # Creo grafo  
@@ -84,13 +99,14 @@ for (SOGLIA in soglia_list) {
   png(paste("images/eventi_loop/grafo_", name, ".png", sep=""),
       width=ratio*950,height=ratio*670)
   # Creo grafico
-  COL <- col_vector[1:length(levels(category_list))]
-  names(COL) <- levels(category_list)
+  COL <- col_vector[1:length(levels(group_list))]
+  names(COL) <- levels(group_list)
   
   myplot <- ggnet2(net = e.net, 
                    mode = "fruchtermanreingold", # placement method (default)
-                   size = 3.5, # grandezza dei nodi
-                   max_size = 5, # grandezza massima nodi
+                   size = "degree", # grandezza dei nodi
+                   size.cut = TRUE,  # gruppi di grandezza dei nodi (quartili)
+                   #max_size = 5, # grandezza massima nodi
                    shape = 19, # forma nodi
                    layout.exp = 0, # regola grandezza immagine (0 e' grande)
                    alpha = 1, # trasparenza nodi (tra 0 e 1)
@@ -102,17 +118,17 @@ for (SOGLIA in soglia_list) {
                    edge.alpha = 0.8, # trasparenza archi (tra 0 e 1)
                    edge.lty = 1, # tipo di linea archi
                    edge.label = NULL, # etichette archi
-                   legend.size = 20, # dimensione legenda
+                   legend.size = 15, # dimensione legenda
                    legend.position = "right", # posizione legenda
                    
-                   color = category_list, # colore nodi
-                   color.legend = paste("category (", tot_events, ")", sep=""),
+                   color = group_list, # colore nodi
+                   color.legend = paste("group (", tot_events, ")", sep=""),
                    palette = COL
-                  )
+  )
   # Salvo grafico nel file .png
   print(myplot)
   # Chiudo file .png
   dev.off()
 }
 
-# ---------------------------------------------------------------------------- #
+# ----------------------------------------------------------------------------- #
