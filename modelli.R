@@ -9,7 +9,7 @@ library(amen)
 
 source("src/functions.R")
 source("src/dataset.R")
-source("modelli_variabili_rete.R")
+source("src/prep_modelli_rete.R")
 
 
 # Creazione sociomatrice in base alla soglia
@@ -19,7 +19,7 @@ y <- as.matrix(eventi_sociomatrice)
 diag(y) <- rep(NA, NCOL(y))
 
 # Variabili per modello ame
-var.ame <- variabili_ame(eventi_sociomatrice)
+var.ame <- variabili_ame(eventi_sociomatrice, events_groups)
 
 # Variabili per altri modelli
 var.mod <- variabili_modelli(sociomatrice = eventi_sociomatrice,
@@ -29,7 +29,6 @@ var.mod <- variabili_modelli(sociomatrice = eventi_sociomatrice,
 df <- as.data.frame(cbind(var.mod$y_v,var.mod$dframe))
 colnames(df) <- c("y", colnames(var.mod$dframe))
 df <- na.omit(df)
-
 
 
 
@@ -52,7 +51,6 @@ pred.srrm <- pmax(srrm$YPM, 0)
 # Modello lineare
 lm <- lm(var.mod$y_v ~ ., data = var.mod$dframe)
 pred.v.lm <- c(predict(lm))
-names(pred.v.lm) <- NULL
 pred.lm <- matrice_previsioni(pred.v.lm, NCOL(y))
 pred.lm <- pmax(pred.lm, 0)
 rm(pred.v.lm)
