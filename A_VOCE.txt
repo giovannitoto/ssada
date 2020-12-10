@@ -1,0 +1,240 @@
+
+TITOLO:
+
+2-3-4-5: leggere
+
+6.
+VARIABILI
+Si escludono:
+- state e hometown poiché hanno moltissimi NA;
+- city perché sono quasi tutti Nashville
+- lat e lon perché si riferiscono all'abitazione 
+  (quindi sono molto simili alla città)
+- organizer_id perché quasi la totalità dei gruppi è organizzata da
+  utenti diversi, e quasi coincide con l'identificatore di gruppo
+- group_urlname perché è un identificatore per il sito, quindi è un 
+  analogo di group_id
+- le coppie di varibaili category_name-category_id e group_name-group_id sono
+  in corrispondenza biunivoca, quindi se ne considera solo una.
+
+8.
+DUE APPROCCI
+Nel primo caso siamo interessati a come gli eventi sono legati fra di loro
+(nel senso di partecipanti comuni), mentre nel secondo caso gli eventi vengono 
+considerati come entità a sè stanti
+
+9-10
+
+11: lettura tabella (commenti alla slide dopo)
+12: leggere
+motivazioni: onerosità computazionale per la rappresentazione della rete,
+inoltre si avrebbe una sociomatrice molto sparsa che intecca la qualità
+delle previsioni per i modelli per dati di rete visti.
+
+13.
+ISTOGRAMMI VERDI
+Per selezionare le soglie si è guardato l'istogramma per la partecipazione
+agli eventi
+SX: la stragrande maggioranza degli eventi ha meno di venti partecipanti
+DX: focus su eventi con almeno 30 partecipanti
+
+14.
+TABELLA
+Colori: più intenso significa una maggiore variazione di numero di eventi cumulati 
+rispetto alla soglia precedente
+
+15.
+ISTOGRAMMA COLORATO
+Concentrandoci sugli eventi con più partecipanti (almeno 30) e vediamo che
+fanno parte solamente di 10 categorie, in particolare la categoria con più
+affluenza è Tech.
+In basso sono riportate le soglie che verranno prese in considerazione
+
+16-20.
+GRAFI GLOBALI
+- Tech è la categoria principale che ha eventi molto connessi fra di loro ed 
+  emerge come cluster già da soglie alte
+- A partire da soglia 50 iniziano a delinearsi e a soglia 40 risultano evidenti
+  altri 3 cluster: uno con eventi religiosi, uno di film e uno con le cateogrie 
+  rimanenti, tra le quali le principali sono Career&Business, Socializing e Outdoor
+  (che identificheremo come cluster di "socialità")
+- A soglia 30 si crea un cluster molto isolato e con molti collegamenti interni
+  con eventi solo di cateogria games. Questi eventi hanno tra i 30 e i 40 
+  partecipanti
+  Gli eventi di cluster definiti in precedenza sono ancora separati per categorie 
+  ma non si distinguono più le connessioni, anche perche...->
+- Si nota nel complesso come abbassando la soglia la comprensibilità della rete
+  tende a diminuire. (e ciò giustifica la scelta di porre una soglia fatta in
+  precedenza)
+
+21.
+TABELLA RETE
+Utilizzando anche questa tabella riassuntiva per quanto riguarda i grafi delle 
+reti viste, e tenendo conto dei problemi di tipo computazionale e di rispetto
+delle assunzioni di cui abbiamo parlato prima, scegliamo come soglia per formare
+la sociomatrice la soglia 50.
+Soglia 50 che ha un numero ragionevole di nodi e la sociomatrice non risulta troppo
+sparsa.
+(NB il grado aumenta perchè abbassando la soglia aumenta il numero di utenti
+distinti considerato, e quindi aumenta la probabilità che uno di questi abbia
+partecipato a più eventi, quindi aumenta il grado medio)
+
+22
+
+23.
+Veloce spiegazione variabili diadiche
+
+24.
+GRAFICO AME
+Il modello migliore risulta essere un modello AME con R = 1 (con effetto moltiplicativo latente unidimensionale), e vediamo che questo modello coglie
+bene sia effetti di riga e colonna (che coincidono perchè la sociomatrice è
+simmetrica) sia la dipendenza triadica. La dipendenza diadica è fissata ad 1 
+(ed il modello non la stima) poichè la sociomatrice è simmetrica e gli archi
+sono indiretti (non orientati)
+
+25.
+OUTPUT AME
+- variabili diadiche sono entrambe significative, in particolare l'appartenenza
+  allo stesso gruppo ha effetto notevole.
+  L'appartenenza alla stessa categoria ha un effetto minore ma è sempre
+  significativo. Ciò si spiega perchè eventi della stessa categoria possono 
+  trattare tematiche diverse. 
+- i membri iscritti al gruppo non risultano significativi (sorprendentemente)
+- l'apartenenza di un evento ad una certa categoria non sembra avere una grosso
+  effetto (in termini di coefficienti).
+
+26.
+REGOLE ASSOCIATIVE
+Sembra sensato a questo punto svolgere un'analisi delle regole associative sulla
+partecipazione di un utente ad eventi di diverse categorie.
+- I supporti delle regole non sono molto elevati (lo si spiega perché molti utenti   frequentano pochi gruppi, o solamente di una categoria). 
+  Comunque i supporti sono bassi ma in termini assoluti non sono poche persone 
+  (0.01 => 250 persone)
+- Regole interessanti: Single->Socializing, Dancing->Socializing, Single->Dancing;
+- Compaiono solo categorie di quello che avevamo definito cluster "misto".
+- Socializing e Outdoor&Adv sembrano essere quelle che più vengono abbinate alle altre.
+- Da notare che la categoria Tech (quella con più eventi con molti partecipanti) non
+  compare in nessuna di queste regole.
+- La regola con fiducia più alta è quella che associa ad Career&Business e 
+  Outdoor&Adventure Socializing. Questi item compaiono in tre regole e sono gli unici
+  che compaiono a coppie. -->..
+
+27: leggere
+
+28.
+TABELLA TECH
+Visto che abbiamo fissato una sola categoria ci concentriamo ora sui gruppi e 
+e procediamo analogamente a quanto fatto prima.
+-> Ci sono anche in questa situazioni alcuni gruppi con tanti eventi con molti
+   partecipanti (NashJS, NET User group) e altri con molti eventi con meno partecipanti
+   (Code for Nashvile, Nashville UX, Nashville Product Meetup)
+-> (eventualmente da far notare alcune particolarità tipo categorie con un solo evento
+   numeroso)
+
+29-35.
+GRAFI TECH
+- Con soglie alte (70, 60, 50) si vede come, sebbene ci siano alcuni eventi con più
+  connessioni di altri, i nodi sono abbastanza interconnessi tra loro.
+- I nodi centrali (con grado più elevato) appartengono per la maggior parte ad alcuni
+  gruppi: NashJS, PyNash, NET User group
+- Da 40 in giù la visualizzazione della rete è più difficile perchè gli archi si fanno 
+  sempre più fitti.
+- Da 40 in giù entrano altri gruppi, come Mobile Developers
+- A soglia 20 i gruppi citati sono ancora centrali
+- Si mostra velocemente il grafo senza soglia per far vedere che non si capisce nulla 
+
+36.
+TABELLA RETE TECH
+- Come detto questo cluster è sempre abbastanza denso (più denso dell'intera rete)
+- Le dinamiche sono piùomeno uguali a prima.
+Sempre per i motivi di prima e con la stessa logica, in questo caso selezioniamo la 
+soglia 40 per stimare il modello AME sulla corrispondente sociomatrice
+
+37.
+GRAFICI AME TECH
+In questo caso il modello con R=2 risulta quello migliore dal punto di vista
+dell'errore di previsione (il MAE).
+Questo modello coglie bene l'effetto del nodo, ma sovrastima la dipensenza triadica
+
+38.
+OUTPUT AME TECH
+In questo caso non viene più considerata la cateogoria come variabile di nodo, ma si
+sostituisce con il gruppo di appartenenza. 
+E' stata rimossa anche la variabile diadica "stessa_categoria".
+-> anche in questo caso l'appartenenza allo stesso gruppo risulta significativa ed ha
+   un effetto considerevole
+-> continua a non avere un effetto significativo il numero dei membri iscritti al
+   gruppo.
+-> Per i gruppi non si può avere una interpretazione univoca, ma solo in comparazione
+   alla modalità di riferimento (Agile Nashvile User Group)
+
+39. 
+REGOLE ASSOCIATIVE TECH
+- Vediamo che NashJS e Code_for_Nashville sono i principali gruppi in comune.
+  (Soprattuto NashJS viene associato a molti gruppi che sono diversi fra loro)
+- Tutte le regole hanno fiducia buona, lift elevato e buon support
+
+40.
+TABELLA SOCIALITA' 
+Gruppi rilevanti alle varie soglie
+Sembrano esserci pochi eventi molto numerosi e molti tra i 20 e i 39 partecipanti,
+situazione molto più uniforma rispetto alla situazione del cluster Tech precedente.
+(ev. da notare: Nashville Flight Trainig, 1 solo evento molto grande)
+
+41.
+INSIEMI SOCIALITA'
+Rappresentazione degli partecipanti in comune fra le tre categorie.
+Descrizione veloce (1% => 100 pesone)
+
+42-48.
+GRAFI SOCIALITA'
+- Fino a soglia 50 non c'è una grande distinzione fra le categorie, che invece iniziano
+  a delinearsi da soglia 40 in giù
+- A soglia 20 notiamo come la maggior parte dei 3 gruppi è separate secondo le tre 
+  categorie, ad eccezzione del gruppo "Nashville Young Professonals Meetup" che è molto
+  legato a gruppi della categoria "Socializing".
+- All'interno della stessa categoria i gruppi si mescolano abbastanza fra di loro.
+- Grafo senza soglia incomprensibile
+
+49.
+TABELLA RETE SOCIALITA'
+Comportamento in linea con quello generale, con densità più costante nella parte iniziale
+Per i soliti motivi si sceglie soglia 30 per la stima del modello.
+
+50.
+GRAFICI MODELLO AME
+In questo caso il modello con R=2 risulta quello migliore dal punto di vista
+dell'errore di previsione (il MAE).
+Questo modello coglie bene l'effetto del nodo e molto bene la dipensenza triadica.
+
+51.
+OUTPUT AME SOCIALITA'
+- Same_category non significativo, ad evienziare l'idea di considerarli come cluster
+- Same_group risulta significativo e con effetto abbastanza grande (minore che nelle
+  altre situazioni)
+- Le cateogrie di appartenenza sembrano influenzare poco
+
+52-53: leggere
+
+54.
+PREVISIONE - GLOBALE
+- Accenniamo alla suddivisione in stima e verifica.
+- Come errore di previsione consideriamo il MAE, perchè offre una interpretazione:
+  ossia dice in valore assoluto di quanti partecipanti i modelli sbagliano in media.
+
+55.
+INTERPRETAZIONE RF - GLOBALE
+Tenendo presente che non sono valori con fondamenti teorici.. (da prendere con le pinze)
+Ci si aspettava importanza maggiore di mese.
+
+56.
+PREVISIONE - TECH
+Usato gruppi al posto di categorie
+
+57: commentare
+
+58-59: commentare.
+
+60
+CONCLUSIONI: leggere
+
