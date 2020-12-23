@@ -1,7 +1,7 @@
 #### PREVISIONE PRESENZA AGLI EVENTI ####
 
 rm(list = ls())
-setwd("E:\\UNIVERSITA\\GUIDOLIN\\Progetto")
+setwd("D:\\UNIVERSITA\\GUIDOLIN\\Progetto")
 
 source("src/functions.R")
 source("dataset_previsione.R")
@@ -174,22 +174,47 @@ resume$MAE <- c(mae.lm, mae.lasso, mae.mars, mae.tree, mae.nn, mae.gb, mae.rf)
 resume
 
 
+# Grafico miglior modello
+library(ggplot2)
+rf.imp <- matrix(NA, ncol = 2, nrow = 6)
+rf.imp <- as.data.frame(rf.imp)
+colnames(rf.imp) <- c("Variabili", "Importanza")
+rf.imp[,1] <- c("categoria", "membri iscritti", "membri attivi", "anno", "mese", 
+                "weekend")
+rf.imp[,2] <- rf$importance[,1]
+rf.imp
+rf.imp %>% 
+  ggplot(aes(x = reorder(Variabili, Importanza), 
+             y = Importanza)) + 
+  geom_col(fill = "blue",
+           width = 0.6) +
+  coord_flip() +
+  xlab("Variabili")
+
+
 
 
 
 #### 2. EVENTI DELLA CATEGORIA "TECH" ####
 
 # Sistemazione dataset
-dati1 <- dati[dati$categoria == "Tech",]
+dati1 <- data[, -8]
+dati1 <- dati1[dati1$categoria == "Tech",]
 dati1 <- dati1[,-2]
+
+dati1[,2] <- factor(dati1[,2], levels = c(levels(dati1[,2]), "altro"))
+dati1[,2][dati1[,2] %in% attr(table(dati1[,2])[table(dati1[,2]) <= 23],
+                        "dimnames")[[1]]] = "altro"
+dati1[,2] <- factor(dati1[,2])
+
 set.seed(12)
 acaso <- sample(1:NROW(dati1), NROW(dati1)*0.75)
 sss1 <- dati1[acaso,]
 vvv1 <- dati1[-acaso,]
 sss.s1 <- sss1
-sss.s1[,-c(1,4,5,6)] <- scale(sss1[,-c(1,4,5,6)])
+sss.s1[,-c(1,2,5,6,7)] <- scale(sss1[,-c(1,2,5,6,7)])
 vvv.s1 <- vvv1
-vvv.s1[,-c(1,4,5,6)] <- scale(vvv1[,-c(1,4,5,6)])
+vvv.s1[,-c(1,2,5,6,7)] <- scale(vvv1[,-c(1,2,5,6,7)])
 x1 <- model.matrix(~., data = sss.s1[,-1])
 x.vvv1 <- model.matrix(~., data = vvv.s1[,-1])
 
@@ -273,7 +298,7 @@ for(d in 1:length(decay1)){
 mae.ciclo1
 min(mae.ciclo1)
 set.seed(17)
-nn1 <- nnet(y ~ ., data = sss1, size = nodi1[8], decay = decay1[7],
+nn1 <- nnet(y ~ ., data = sss1, size = nodi1[9], decay = decay1[2],
            maxit = 2000, linout = TRUE, MaxNWts = 2000)
 p.nn1 <- pmax(predict(nn1, newdata = vvv1), 0)
 (mae.nn1 <- mean(abs(p.nn1 - vvv1$y)))
@@ -284,7 +309,7 @@ library(gbm)
 set.seed(18)
 cb1 <- sample(1:NROW(sss1), NROW(sss1)*0.67)
 cb2 <- setdiff(1:NROW(sss1), cb1)
-shri1 <- 10^(seq(-3, -1, length = 6))
+shri1 <- 10^(seq(-3, -1, length = 5))
 int1 <- c(1:5)
 mae.ciclo_gb1 <- matrix(0, length(shri1), length(int1))
 set.seed(19)
@@ -301,7 +326,7 @@ mae.ciclo_gb1
 min(mae.ciclo_gb1)
 set.seed(20)
 gb1 <- gbm(y ~ ., data = sss1, distribution = "gaussian", n.trees = 5000, 
-          interaction.depth = int1[4], shrinkage = shri1[3])
+          interaction.depth = int1[4], shrinkage = shri1[2])
 p.gb1 <- pmax(predict(gb1, newdata = vvv1), 0)
 (mae.gb1 <- mean(abs(vvv1$y - p.gb1), na.rm = TRUE))
 summary(gb1)
@@ -325,7 +350,7 @@ for(i in mtry1){
 mae.rfc1
 min(mae.rfc1)
 set.seed(23)
-rf1 <- randomForest(y ~ ., data = sss1, nodesize = 1, ntree = 500, mtry = mtry1[3], 
+rf1 <- randomForest(y ~ ., data = sss1, nodesize = 1, ntree = 500, mtry = mtry1[2], 
                    importance = TRUE)
 p.rf1 <- pmax(predict(rf1, newdata = vvv1), 0)
 (mae.rf1 <- mean(abs(vvv1$y - p.rf1), na.rm = TRUE))
@@ -339,6 +364,25 @@ resume1$Modello <- c("modello lineare", "lm lasso", "MARS", "albero di regressio
                     "rete neurale", "gradient boosting", "random forest")
 resume1$MAE <- c(mae.lm1, mae.lasso1, mae.mars1, mae.tree1, mae.nn1, mae.gb1, mae.rf1)
 resume1
+
+
+# Grafico miglior modello # DA RIFARE
+library(ggplot2)
+rf.imp1 <- matrix(NA, ncol = 2, nrow = 6)
+rf.imp1 <- as.data.frame(rf.imp1)
+colnames(rf.imp1) <- c("Variabili", "Importanza")
+rf.imp1[,1] <- c("gruppo", "membri iscritti", "membri attivi", "anno", "mese", 
+                "weekend")
+rf.imp1[,2] <- rf1$importance[,1]
+rf.imp1
+rf.imp1 %>% 
+  ggplot(aes(x = reorder(Variabili, Importanza), 
+             y = Importanza)) + 
+  geom_col(fill = "blue",
+           width = 0.6) +
+  coord_flip() +
+  xlab("Variabili")
+
 
 
 
@@ -506,6 +550,28 @@ resume2$Modello <- c("modello lineare", "lm lasso", "MARS", "albero di regressio
                     "rete neurale", "gradient boosting", "random forest")
 resume2$MAE <- c(mae.lm2, mae.lasso2, mae.mars2, mae.tree2, mae.nn2, mae.gb2, mae.rf2)
 resume2
+
+
+# Grafico miglior modello
+library(tidyverse)
+library(ggplot2)
+rf.imp2 <- matrix(NA, ncol = 2, nrow = 6)
+rf.imp2 <- as.data.frame(rf.imp2)
+colnames(rf.imp2) <- c("Variabili", "Importanza")
+rf.imp2[,1] <- c("categoria", "membri iscritti", "membri attivi", "anno", "mese", 
+                "weekend")
+rf.imp2[,2] <- rf2$importance[,1]
+rf.imp2
+rf.imp2 %>% 
+  ggplot(aes(x = reorder(Variabili, Importanza), 
+             y = Importanza)) + 
+  geom_col(fill = "blue",
+           width = 0.6) +
+  coord_flip() +
+  xlab("Variabili")
+
+
+
 
 
 #### RESUME ####
