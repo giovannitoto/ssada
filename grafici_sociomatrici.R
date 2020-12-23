@@ -55,25 +55,25 @@ NAME <- "_30"
 eventi_data <- filtro_e(data, 30)$data
 eventi_sociomatrice <- sociomatrice_eventi(eventi_data)
 
-# length(unique(eventi_data$category_name))      # categorie considerate
-# length(unique(eventi_data$group_name))         # gruppi considerati
-# length(unique(eventi_data$member_id))          # membri distinti considerati
-# part.tot <- nrow(eventi_data); part.tot        # partecipazioni totali
-# part.tot/length(unique(eventi_data$member_id)) # partecipazioni medie
+length(unique(eventi_data$category_name))      # categorie considerate
+length(unique(eventi_data$group_name))         # gruppi considerati
+length(unique(eventi_data$member_id))          # membri distinti considerati
+part.tot <- nrow(eventi_data); part.tot        # partecipazioni totali
+part.tot/length(unique(eventi_data$member_id)) # partecipazioni medie
 
 # Creo grafo  
-# e.net <- graph_from_adjacency_matrix(as.matrix(eventi_sociomatrice), 
-#                                      mode="undirected", weighted=T, diag=F)
-# n.nodi <- length(V(e.net)); n.nodi         # numero nodi
-# n.archi <- length(E(e.net)); n.archi       # numero archi
-# archi.max <- n.nodi*(n.nodi-1); archi.max  # numero max di archi
-# edge_density(e.net)                        # densita'
-# sum(eventi_sociomatrice) / (2*n.archi)     # valore medio degli archi (y_{ij}>0)
-# mean(igraph::degree(e.net))                # grado medio
-# median(igraph::degree(e.net))              # grado mediano
-# mean(igraph::betweenness(e.net))           # betweenness medio
-# median(igraph::betweenness(e.net))         # betweenness mediano
-# diameter(e.net)                            # diametro
+e.net <- graph_from_adjacency_matrix(as.matrix(eventi_sociomatrice),
+                                     mode="undirected", weighted=T, diag=F)
+n.nodi <- length(V(e.net)); n.nodi         # numero nodi
+n.archi <- length(E(e.net)); n.archi       # numero archi
+archi.max <- n.nodi*(n.nodi-1); archi.max  # numero max di archi
+edge_density(e.net)                        # densita'
+sum(eventi_sociomatrice) / (2*n.archi)     # valore medio degli archi (y_{ij}>0)
+mean(igraph::degree(e.net))                # grado medio
+median(igraph::degree(e.net))              # grado mediano
+mean(igraph::betweenness(e.net))           # betweenness medio
+median(igraph::betweenness(e.net))         # betweenness mediano
+diameter(e.net)                            # diametro
 
 # Definisco impostazioni del grafico
 ratio <- 1.5
@@ -93,21 +93,21 @@ names(COL) <- class.c <- c("Career & Business",
                            "Tech",
                            "Other")
 
-# Calcolo numero eventi per le categorie principali
-# category_list <- events_groups[rownames(eventi_sociomatrice), c("category_name")]
-# category_list <- as.factor(category_list)
-# 
-# new_levels <- levels(category_list)
-# for (c in 1:length(levels(category_list))) {
-#   if (!(levels(category_list)[c] %in% class.c)) {
-#     new_levels[c] <- "Other"
-#   }
-# }
-# levels(category_list) <- new_levels
-# for (c in 1:length(levels(category_list))) {
-#   cat(paste(levels(category_list)[c], ":",
-#             sum(category_list==levels(category_list)[c]),"\n"))
-# }
+Calcolo numero eventi per le categorie principali
+category_list <- events_groups[rownames(eventi_sociomatrice), c("category_name")]
+category_list <- as.factor(category_list)
+
+new_levels <- levels(category_list)
+for (c in 1:length(levels(category_list))) {
+  if (!(levels(category_list)[c] %in% class.c)) {
+    new_levels[c] <- "Other"
+  }
+}
+levels(category_list) <- new_levels
+for (c in 1:length(levels(category_list))) {
+  cat(paste(levels(category_list)[c], ":",
+            sum(category_list==levels(category_list)[c]),"\n"))
+}
 
 # Elimino nodi con troppo pochi archi
 sort(rowSums(eventi_sociomatrice))[1:8]
@@ -287,25 +287,25 @@ cat_list <- c("Socializing", "Outdoors & Adventure", "Career & Business")
 eventi_data <- filtro_e(data[data$category_name %in% cat_list,], 0)$data
 eventi_sociomatrice <- sociomatrice_eventi(eventi_data)
 
-# length(unique(eventi_data$category_name))      # categorie considerate
-# length(unique(eventi_data$group_name))         # gruppi considerati
-# length(unique(eventi_data$member_id))          # membri distinti considerati
-# part.tot <- nrow(eventi_data); part.tot        # partecipazioni totali
-# part.tot/length(unique(eventi_data$member_id)) # partecipazioni medie
+length(unique(eventi_data$category_name))      # categorie considerate
+length(unique(eventi_data$group_name))         # gruppi considerati
+length(unique(eventi_data$member_id))          # membri distinti considerati
+part.tot <- nrow(eventi_data); part.tot        # partecipazioni totali
+part.tot/length(unique(eventi_data$member_id)) # partecipazioni medie
 
 # Creo grafo  
-# e.net <- graph_from_adjacency_matrix(as.matrix(eventi_sociomatrice), 
-#                                      mode="undirected", weighted=T, diag=F)
-# n.nodi <- length(V(e.net)); n.nodi         # numero nodi
-# n.archi <- length(E(e.net)); n.archi       # numero archi
-# archi.max <- n.nodi*(n.nodi-1); archi.max  # numero max di archi
-# edge_density(e.net)                        # densita'
-# sum(eventi_sociomatrice) / (2*n.archi)     # valore medio degli archi (y_{ij}>0)
-# mean(igraph::degree(e.net))                # grado medio
-# median(igraph::degree(e.net))              # grado mediano
-# mean(igraph::betweenness(e.net))           # betweenness medio
-# median(igraph::betweenness(e.net))         # betweenness mediano
-# diameter(e.net)                            # diametro
+e.net <- graph_from_adjacency_matrix(as.matrix(eventi_sociomatrice),
+                                     mode="undirected", weighted=T, diag=F)
+n.nodi <- length(V(e.net)); n.nodi         # numero nodi
+n.archi <- length(E(e.net)); n.archi       # numero archi
+archi.max <- n.nodi*(n.nodi-1); archi.max  # numero max di archi
+edge_density(e.net)                        # densita'
+sum(eventi_sociomatrice) / (2*n.archi)     # valore medio degli archi (y_{ij}>0)
+mean(igraph::degree(e.net))                # grado medio
+median(igraph::degree(e.net))              # grado mediano
+mean(igraph::betweenness(e.net))           # betweenness medio
+median(igraph::betweenness(e.net))         # betweenness mediano
+diameter(e.net)                            # diametro
 
 # Definisco impostazioni del grafico
 ratio <- 1.5
@@ -327,30 +327,6 @@ names(COL) <- class.c <- c("20's & 30's Women looking for girlfriends",
                            "WOMEN \"Word of Mouth Entrepreneurial Networkers\"",
                            "Other")
 
-# Calcolo numero eventi per le categorie principali
-# category_list <- events_groups[rownames(eventi_sociomatrice), c("group_name")]
-# category_list <- as.factor(category_list)
-# 
-# new_levels <- levels(category_list)
-# for (c in 1:length(levels(category_list))) {
-#   if (!(levels(category_list)[c] %in% class.c)) {
-#     new_levels[c] <- "Other"
-#   }
-# }
-# levels(category_list) <- new_levels
-# for (c in 1:length(levels(category_list))) {
-#   cat(paste(levels(category_list)[c], ":",
-#             sum(category_list==levels(category_list)[c]),"\n"))
-# }
-
-# Elimino nodi con troppo pochi archi
-# sort(rowSums(eventi_sociomatrice))[1:8]
-# nodi_da_rimuovere <- c()
-# for (nn in nodi_da_rimuovere) {
-#   eventi_sociomatrice <- eventi_sociomatrice[!(rownames(eventi_sociomatrice) %in% nodi_da_rimuovere), ]
-#   eventi_sociomatrice <- eventi_sociomatrice[, !(colnames(eventi_sociomatrice) %in% nodi_da_rimuovere)]
-# }
-
 # Identifico categorie e assegno colori
 category_list <- events_groups[rownames(eventi_sociomatrice), c("group_name")]
 category_list <- as.factor(category_list)
@@ -370,9 +346,6 @@ for (c in 1:length(levels(category_list))) {
 # Associo forme diverse ai tre gruppi considerati
 shape_list <- events_groups[rownames(eventi_sociomatrice), c("category_name")]
 shape_list <- as.factor(shape_list)
-# shape_list[shape_list=="Socializing"] <- 
-# shape_list[shape_list=="Outdoors & Adventure"] <- 
-# shape_list[shape_list=="Career & Business"] <- 
 
 # Creo grafo ridotto
 e.net <- graph_from_adjacency_matrix(as.matrix(eventi_sociomatrice), 

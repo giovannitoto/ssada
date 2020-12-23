@@ -1,15 +1,14 @@
-#### MODELLI ####
+#### MODELLI AME ####
 
 rm(list = ls())
-setwd("E:\\UNIVERSITA\\GUIDOLIN\\Progetto")
-# setwd("D:\\UNIVERSITA\\GUIDOLIN\\Progetto")
+#setwd("E:\\UNIVERSITA\\GUIDOLIN\\Progetto")
 
 library(sqldf)  
 library(igraph)
 library(amen)
 
 source("src/functions.R")
-source("modelli_variabili_rete.R")
+source("src/modelli_variabili_rete.R")
 
 
 
