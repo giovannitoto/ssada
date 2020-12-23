@@ -1,13 +1,22 @@
 # Strumenti Statistici per l'Analisi di Dati Aziendali
 
-## Link utili
+## Contenuti
+La cartella *data* contiene i dataset scaricati da Kaggle ([https://www.kaggle.com/stkbailey/nashville-meetup](https://www.kaggle.com/stkbailey/nashville-meetup)).
 
-- [ggnet2 (documentazione)](https://www.rdocumentation.org/packages/GGally/versions/1.5.0/topics/ggnet2)
+La cartella *doc* contiene file consultati durante lo svolgimento del progetto.
 
-- [ggnet (github)](https://briatte.github.io/ggnet/)
+La cartella *img_latex* contiene tutte le immagini inserite nella presentazione.
 
-- [colori R (stackoverflow)](https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r)
+La cartella *src* contiene dei file .R che vengono richiamati da quelli della cartella principale tramite il comando `source()`.
 
-- [diagramma di Eulero Venn (generatore)](https://www.deepvenn.com/)
+La cartella principale contiene:
 
-- [esempi ggplot R](https://www.r-graph-gallery.com/index.html)
+* `arules.R`: contiene il codice per effettuare l'analisi delle associazioni.
+
+* `grafici_sociomatrice.R`: contiene il codice per ottenere i vari grafici contenuti nella presentazione e per calcolare le statistiche descrittive delle reti.
+
+* `istogramma.R`: contiene il codice per costruire vari istogrammi.
+
+* `modelli_ame.R`: contiene il codice per la stima dei modelli AME.
+
+* `previsione_eventi.R`: contiene il codice per effettuare le analisi sulla partecipazione al singolo evento.
