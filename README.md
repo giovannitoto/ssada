@@ -3,7 +3,7 @@
 ## Contenuti
 La cartella *data* contiene i dataset scaricati da Kaggle ([https://www.kaggle.com/stkbailey/nashville-meetup](https://www.kaggle.com/stkbailey/nashville-meetup)).
 
-La cartella *doc* contiene file consultati durante lo svolgimento del progetto.
+La cartella *doc* contiene file consultati durante lo svolgimento del progetto e la presentazione finale (`presentazione_meetup`).
 
 La cartella *img_latex* contiene tutte le immagini inserite nella presentazione.
 
